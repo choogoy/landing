@@ -65,8 +65,6 @@ window.addEventListener('DOMContentLoaded', () => {
         handlerMenu();
       } else if (menu.classList.contains('active-menu') && !target.closest('menu')) {
         handlerMenu();
-      } else {
-        return;
       }
 
       const smoothScroll = id => {
