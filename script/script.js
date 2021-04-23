@@ -63,8 +63,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (target.closest('.menu')) {
         handlerMenu();
-      } else if (!target.closest('menu')) {
-        menu.classList.remove('active-menu');
+      } else if (menu.classList.contains('active-menu') && !target.closest('menu')) {
+        handlerMenu();
+      } else {
+        return;
       }
 
       const smoothScroll = id => {
