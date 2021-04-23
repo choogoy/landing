@@ -51,22 +51,36 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Menu
   const toggleMenu = () => {
-    const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu');
-
+    const menu = document.querySelector('menu');
     const handlerMenu = () => menu.classList.toggle('active-menu');
 
-    btnMenu.addEventListener('click', handlerMenu);
-
-    menu.addEventListener('click', event => {
+    document.addEventListener('click', event => {
       let target = event.target;
-      console.log(target);
-
+    
       if (target.classList.contains('close-btn')) {
         handlerMenu();
       }
-      
-      if (target.closest('a')) {
+
+      if (target.closest('.menu')) {
+        handlerMenu();
+      }
+
+      const smoothScroll = id => {
+        document.getElementById(id).scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      };
+
+      if (target.closest('a[href="#service-block"]')) {
+        event.preventDefault();
+        smoothScroll('service-block');
+      }
+
+      if (target.closest('li>a')) {
+        event.preventDefault();
+        const blockID = target.getAttribute('href').substr(1);
+        smoothScroll(blockID);
         handlerMenu();
       }
 
