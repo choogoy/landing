@@ -46,8 +46,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   };
 
-  countTimer('27 April 2021');
-  setInterval(countTimer, 1000, '27 April 2021');
+  countTimer('29 April 2021');
+  setInterval(countTimer, 1000, '29 April 2021');
 
   // Menu
   const toggleMenu = () => {
@@ -322,5 +322,89 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   slider();
+
+  // Our team
+
+  const command = document.getElementById('command');
+
+  const changeImage = event => {
+    const target = event.target;
+    const image = target.closest('.command__photo');
+
+    if (image) {
+      const newSrc = image.dataset.img;
+      image.dataset.img = image.src;
+      image.src = newSrc;
+    }
+  };
+
+  command.addEventListener('mouseover', changeImage);
+  command.addEventListener('mouseout', changeImage);
+
+  // Calculator
+
+  const calcBlock = document.querySelector('.calc-block');
+
+  calcBlock.addEventListener('input', event => {
+    const input = event.target.closest('input');
+    if (input) {
+      input.value = input.value.replace(/\D/gi, '').replace(/^0/gi, ''); // только цифры и первая не ноль 
+    }
+  });
+
+  // Footer form validator
+ 
+  const name = document.getElementById('form2-name');  
+  const email = document.getElementById('form2-email');
+  const phone = document.getElementById('form2-phone');
+  const message = document.getElementById('form2-message');
+
+  email.addEventListener('blur', () => {
+
+    email.value = email.value .replace(/[^a-z@_.!~*'\-]/gi, '')
+                              .replace(/-+/g, '-')
+                              .replace(/^-/g, '')
+                              .replace(/-$/g, '')
+                              .replace(/ +/g, '')
+                              .replace(' ', '');
+  });
+
+  name.addEventListener('blur', () => {
+
+    name.value = name.value .replace(/[^а-яё -]/gi, '')
+                            .replace(/-+/g, '-')
+                            .replace(/ +/g, ' ')
+                            .replace(/^-/g, '')
+                            .replace(/^ /g, '')
+                            .replace(/-$/g, '')
+                            .replace(/ $/g, '');
+
+    name.value = name.value[0].toUpperCase() + name.value.slice(1).toLowerCase();
+
+    // вот он костылик =) я целый день думал как это сделать...
+    let arr = [];
+    name.value.split(' ').forEach(elem => arr.push(elem[0].toUpperCase() + elem.slice(1)));
+    name.value = arr.join(' ');
+
+  });
+
+  message.addEventListener('blur', () => {
+
+    message.value = message.value .replace(/[^а-яё -]/gi, '')
+                                  .replace(/-+/g, '-')
+                                  .replace(/ +/g, ' ')
+                                  .replace(/^-/g, '')
+                                  .replace(/^ /g, '')
+                                  .replace(/-$/g, '')
+                                  .replace(/ $/g, '');
+  });
+
+  phone.addEventListener('blur', () => {
+
+    phone.value = phone.value .replace(/[^0-9()-]/gi, '')
+                              .replace(/-+/g, '-')
+                              .replace(/^-/g, '')
+                              .replace(/-$/g, '');
+  });
 
 });
