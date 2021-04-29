@@ -46,8 +46,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   };
 
-  countTimer('29 April 2021');
-  setInterval(countTimer, 1000, '29 April 2021');
+  countTimer('30 April 2021');
+  setInterval(countTimer, 1000, '30 April 2021');
 
   // Menu
   const toggleMenu = () => {
@@ -325,86 +325,106 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Our team
 
-  const command = document.getElementById('command');
+  const changeTeamImages = () => {
 
-  const changeImage = event => {
-    const target = event.target;
-    const image = target.closest('.command__photo');
+    const command = document.getElementById('command');
 
-    if (image) {
-      const newSrc = image.dataset.img;
-      image.dataset.img = image.src;
-      image.src = newSrc;
-    }
+    const changeImage = event => {
+      const target = event.target;
+      const image = target.closest('.command__photo');
+  
+      if (image) {
+        const newSrc = image.dataset.img;
+        image.dataset.img = image.src;
+        image.src = newSrc;
+      }
+    };
+  
+    command.addEventListener('mouseover', changeImage);
+    command.addEventListener('mouseout', changeImage);
+  
   };
 
-  command.addEventListener('mouseover', changeImage);
-  command.addEventListener('mouseout', changeImage);
+  changeTeamImages();
 
   // Calculator
 
-  const calcBlock = document.querySelector('.calc-block');
+  const validCalc = () => {
+    const calcBlock = document.querySelector('.calc-block');
 
-  calcBlock.addEventListener('input', event => {
-    const input = event.target.closest('input');
-    if (input) {
-      input.value = input.value.replace(/\D/gi, '').replace(/^0/gi, ''); // только цифры и первая не ноль 
-    }
-  });
+    calcBlock.addEventListener('input', event => {
+      const input = event.target.closest('input');
+      if (input) {
+        input.value = input.value.replace(/\D/gi, '').replace(/^0/gi, ''); // только цифры и первая не ноль 
+      }
+    });
+  };
+
+  validCalc();
 
   // Footer form validator
  
-  const name = document.getElementById('form2-name');  
-  const email = document.getElementById('form2-email');
-  const phone = document.getElementById('form2-phone');
-  const message = document.getElementById('form2-message');
+  const validForm = () => {
 
-  email.addEventListener('blur', () => {
+    const inputsTopForm = document.querySelectorAll('.footer-form input');
 
-    email.value = email.value .replace(/[^a-z@_.!~*'\-]/gi, '')
-                              .replace(/-+/g, '-')
-                              .replace(/^-/g, '')
-                              .replace(/-$/g, '')
-                              .replace(/ +/g, '')
-                              .replace(' ', '');
-  });
+    for (let input of inputsTopForm) {
 
-  name.addEventListener('blur', () => {
+      input.addEventListener('blur', event => {
 
-    name.value = name.value .replace(/[^а-яё -]/gi, '')
-                            .replace(/-+/g, '-')
-                            .replace(/ +/g, ' ')
-                            .replace(/^-/g, '')
-                            .replace(/^ /g, '')
-                            .replace(/-$/g, '')
-                            .replace(/ $/g, '');
-
-    name.value = name.value[0].toUpperCase() + name.value.slice(1).toLowerCase();
-
-    // вот он костылик =) я целый день думал как это сделать...
-    let arr = [];
-    name.value.split(' ').forEach(elem => arr.push(elem[0].toUpperCase() + elem.slice(1)));
-    name.value = arr.join(' ');
-
-  });
-
-  message.addEventListener('blur', () => {
-
-    message.value = message.value .replace(/[^а-яё -]/gi, '')
+        const name = event.target.closest('#form2-name');
+        const email = event.target.closest('#form2-email');
+        const phone = event.target.closest('#form2-phone');
+        const message = event.target.closest('#form2-message');
+  
+        if (name) {
+          let arr = [];
+          name.value = name.value .replace(/[^а-яё -]/gi, '')
                                   .replace(/-+/g, '-')
                                   .replace(/ +/g, ' ')
                                   .replace(/^-/g, '')
                                   .replace(/^ /g, '')
                                   .replace(/-$/g, '')
                                   .replace(/ $/g, '');
-  });
+    
+          name.value = name.value[0].toUpperCase() + name.value.slice(1).toLowerCase();
+          name.value.split(' ').forEach(elem => arr.push(elem[0].toUpperCase() + elem.slice(1)));
+          name.value = arr.join(' ');
+        }
+  
+        if (email) {
+          email.value = email.value .replace(/[^a-z@_.!~*'\-]/gi, '')
+                                    .trim()
+                                    .replace(/-+/g, '-')
+                                    .replace(/^-/g, '')
+                                    .replace(/-$/g, '')
+                                    .replace(/ +/g, '')
+                                    .replace(' ', '');
+        }
 
-  phone.addEventListener('blur', () => {
+        if (message) {  
+          message.value = message.value .replace(/[^а-яё -]/gi, '')
+                                        .replace(/-+/g, '-')
+                                        .replace(/ +/g, ' ')
+                                        .replace(/^-/g, '')
+                                        .replace(/^ /g, '')
+                                        .replace(/-$/g, '')
+                                        .replace(/ $/g, '');
+        }
 
-    phone.value = phone.value .replace(/[^0-9()-]/gi, '')
-                              .replace(/-+/g, '-')
-                              .replace(/^-/g, '')
-                              .replace(/-$/g, '');
-  });
+        if (phone) {
+          phone.value = phone.value .replace(/[^0-9()-]/gi, '')
+                                    .replace(/-+/g, '-')
+                                    .replace(/^-/g, '')
+                                    .replace(/-$/g, '');
+        }
+
+      });
+
+    }
+
+  };
+
+  validForm();
 
 });
