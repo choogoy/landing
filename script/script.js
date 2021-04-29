@@ -380,7 +380,15 @@ window.addEventListener('DOMContentLoaded', () => {
         total = price * typeValue * squareValue * countValue * dayValue;
       }
 
-      totalValue.textContent = total;
+      animate({
+        duration: 300,
+        timing(timeFraction) {
+          return timeFraction;
+        },
+        draw(progress) {
+          totalValue.textContent = Math.round(total * progress);
+        }
+      });
     };
 
     calcBlock.addEventListener('change', event => {
