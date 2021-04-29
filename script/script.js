@@ -349,74 +349,123 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Calculator
 
-  const validCalc = () => {
-    const calcBlock = document.querySelector('.calc-block');
+  const calc = (price = 100) => {
 
-    calcBlock.addEventListener('input', event => {
-      const input = event.target.closest('input');
-      if (input) {
-        input.value = input.value.replace(/\D/gi, '').replace(/^0/gi, ''); // только цифры и первая не ноль 
+    const calcBlock = document.querySelector('.calc-block');
+    const calcType = document.querySelector('.calc-type');
+    const calcSquare = document.querySelector('.calc-square');
+    const calcCount = document.querySelector('.calc-count');
+    const calcDay = document.querySelector('.calc-day');
+    const totalValue = document.getElementById('total');
+
+    const countSum = () => {
+      let total = 0;
+      let countValue = 1;
+      let dayValue = 1;
+      const squareValue = +calcSquare.value;
+      const typeValue = parseFloat( calcType.options[calcType.selectedIndex].value );
+
+      console.log(typeValue);
+      if (calcCount.value > 1) {
+        countValue += (calcCount.value - 1) / 10;
+      }
+
+      if (calcDay.value && calcDay.value < 5) {
+        dayValue *= 2;
+      } else if (calcDay.value && calcDay.value < 10) {
+        dayValue *= 1.5;
+      }
+
+      if (typeValue && squareValue) {
+        console.log(typeValue, squareValue);
+        total = price * typeValue * squareValue * countValue * dayValue;
+      }
+
+      animate({
+        duration: 300,
+        timing(timeFraction) {
+          return timeFraction;
+        },
+        draw(progress) {
+          totalValue.textContent = Math.round(total * progress);
+        }
+      });
+    };
+
+    calcBlock.addEventListener('change', event => {
+      const target = event.target;
+
+      if (target.matches('select') || target.matches('input')) {
+        countSum();
       }
     });
+
+    const validCalc = () => {
+      calcBlock.addEventListener('input', event => {
+        const input = event.target.closest('input');
+        if (input) {
+          input.value = input.value.replace(/\D/gi, '').replace(/^0/gi, ''); // только цифры и первая не ноль 
+        }
+      });
+    };
+  
+    validCalc();
   };
 
-  validCalc();
+  calc(100);
 
   // Footer form validator
  
   const validForm = () => {
 
-    const inputsTopForm = document.querySelectorAll('.footer-form input');
+    const inputs = document.querySelectorAll('input[id]');
 
-    for (let input of inputsTopForm) {
+    for (let input of inputs) {
 
       input.addEventListener('blur', event => {
 
-        const name = event.target.closest('#form2-name');
-        const email = event.target.closest('#form2-email');
-        const phone = event.target.closest('#form2-phone');
-        const message = event.target.closest('#form2-message');
-  
-        if (name) {
+        const target = event.target;
+
+        if (target.classList.contains('form-name')) {
           let arr = [];
-          name.value = name.value .replace(/[^а-яё -]/gi, '')
-                                  .replace(/-+/g, '-')
-                                  .replace(/ +/g, ' ')
-                                  .replace(/^-/g, '')
-                                  .replace(/^ /g, '')
-                                  .replace(/-$/g, '')
-                                  .replace(/ $/g, '');
+          target.value = target.value .replace(/[^а-яё -]/gi, '')
+                                      .replace(/-+/g, '-')
+                                      .replace(/ +/g, ' ')
+                                      .replace(/^-/g, '')
+                                      .replace(/^ /g, '')
+                                      .replace(/-$/g, '')
+                                      .replace(/ $/g, '');
     
-          name.value = name.value[0].toUpperCase() + name.value.slice(1).toLowerCase();
-          name.value.split(' ').forEach(elem => arr.push(elem[0].toUpperCase() + elem.slice(1)));
-          name.value = arr.join(' ');
+          target.value = target.value[0].toUpperCase() + target.value.slice(1).toLowerCase();
+          target.value.split(' ').forEach(elem => arr.push(elem[0].toUpperCase() + elem.slice(1)));
+          target.value = arr.join(' ');
         }
   
-        if (email) {
-          email.value = email.value .replace(/[^a-z@_.!~*'\-]/gi, '')
-                                    .trim()
-                                    .replace(/-+/g, '-')
-                                    .replace(/^-/g, '')
-                                    .replace(/-$/g, '')
-                                    .replace(/ +/g, '')
-                                    .replace(' ', '');
+        if (target.classList.contains('form-email')) {
+          target.value = target.value .replace(/[^a-z@_.!~*'\-]/gi, '')
+                                      .trim()
+                                      .replace(/-+/g, '-')
+                                      .replace(/^-/g, '')
+                                      .replace(/-$/g, '')
+                                      .replace(/ +/g, '')
+                                      .replace(' ', '');
         }
-
-        if (message) {  
-          message.value = message.value .replace(/[^а-яё -]/gi, '')
-                                        .replace(/-+/g, '-')
-                                        .replace(/ +/g, ' ')
-                                        .replace(/^-/g, '')
-                                        .replace(/^ /g, '')
-                                        .replace(/-$/g, '')
-                                        .replace(/ $/g, '');
-        }
-
-        if (phone) {
-          phone.value = phone.value .replace(/[^0-9()-]/gi, '')
+  
+        if (target.classList.contains('form-phone')) {
+          target.value = target.value .replace(/[^0-9()-]/gi, '')
                                     .replace(/-+/g, '-')
                                     .replace(/^-/g, '')
                                     .replace(/-$/g, '');
+        }
+
+        if (target.closest('#form2-message')) {  
+          target.value = target.value .replace(/[^а-яё -]/gi, '')
+                                      .replace(/-+/g, '-')
+                                      .replace(/ +/g, ' ')
+                                      .replace(/^-/g, '')
+                                      .replace(/^ /g, '')
+                                      .replace(/-$/g, '')
+                                      .replace(/ $/g, '');
         }
 
       });
