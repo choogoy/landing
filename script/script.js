@@ -46,8 +46,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
   };
 
-  countTimer('1 May 2021');
-  setInterval(countTimer, 1000, '1 May 2021');
+  const changeDate = () => {
+    const date = new Date();
+
+    new Date ( date.setDate(date.getDate()+1) );
+    new Date ( date.setHours(0, 0, 0) );
+
+    return (new Date(date.setDate(date.getDate())));
+  };
+
+  countTimer(changeDate());
+  setInterval(countTimer, 1000, changeDate());
 
   // Menu
   const toggleMenu = () => {
@@ -454,14 +463,14 @@ window.addEventListener('DOMContentLoaded', () => {
           }
     
           if (target.classList.contains('form-phone')) {
-            target.value = target.value .replace(/[^0-9()-]/gi, '')
+            target.value = target.value .replace(/[^0-9\+]/gi, '')
                                       .replace(/-+/g, '-')
                                       .replace(/^-/g, '')
                                       .replace(/-$/g, '');
           }
   
           if (target.closest('#form2-message')) {  
-            target.value = target.value .replace(/[^а-яё -]/gi, '')
+            target.value = target.value .replace(/[^а-яё0-9,!?. -]/gi, '')
                                         .replace(/-+/g, '-')
                                         .replace(/ +/g, ' ')
                                         .replace(/^-/g, '')
@@ -477,5 +486,85 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   validForm();
+
+  // Send-AJAX-form
+
+  const sendForm = () => {
+
+      const errorMessage = 'Что-то пошло не так...';
+      const loadMessage = 'Загрузка...';
+      const successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+
+      const forms = document.querySelectorAll('form');
+
+      const statusMessage = document.createElement('div');
+      statusMessage.style.cssText = 'font-size: 2rem; color: red;';
+
+      const requestForm = (form, event) => {
+        event.preventDefault();
+        form.append(statusMessage);
+        statusMessage.textContent = loadMessage;
+
+        const formData = new FormData(form);
+
+        let body = {};
+
+        // for (let value of formData.entries()) {
+        //   console.log(value);
+        //   body[value[0]] = value[1];
+        // }
+
+        formData.forEach((value, key) => {
+          body[key] = value;
+        });
+
+        postData(body,
+          () => {
+            statusMessage.textContent = successMessage;
+            form.reset();
+            setTimeout(() => {
+              statusMessage.textContent = '';
+            }, 3000);
+          },
+          error => {
+            console.error(error);
+            statusMessage.textContent = errorMessage;
+            setTimeout(() => {
+              statusMessage.textContent = '';
+            }, 3000);
+          });
+
+      };
+
+      const postData = (body, outputData, errorData) => {
+        const request = new XMLHttpRequest();
+        
+        request.addEventListener('readystatechange', () => {
+
+          if (request.readyState !== 4) {
+            return;
+          }
+
+          if (request.status == 200) {
+            outputData();
+          } else {
+            errorData(request.status);
+          }
+
+        });
+
+        request.open('POST', 'server.php');
+
+        request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        // request.setRequestHeader('Content-Type', 'multipart/form-data');
+
+        // request.send(formData);
+        request.send(JSON.stringify(body));
+      };
+
+      forms.forEach(form => form.addEventListener('submit', event => requestForm(form, event)));
+  };
+
+  sendForm();
 
 });
