@@ -26,7 +26,7 @@ const validForm = () => {
           }
 
           if (target.classList.contains('form-email')) {
-              target.setAttribute("required", "required");
+              target.setAttribute("required", true);
               target.value = target.value.replace(/[^a-z@_.!~*'\-]/gi, '')
                   .trim()
                   .replace(/-+/g, '-')
