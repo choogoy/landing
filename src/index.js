@@ -10,6 +10,7 @@ import changeTeamImages from './modules/changeTeamImages';
 import calc from './modules/calc';
 import validForm from './modules/validForm';
 import sendForm from './modules/sendForm'; 
+import sliderCarousel from './modules/sliderCarousel';
 
 countTimer(changeDate());
 setInterval(countTimer, 1000, changeDate()); // Timer
@@ -21,3 +22,4 @@ changeTeamImages(); // Our team
 calc(100); // Calculator
 validForm(); // Footer form validator
 sendForm(); // Send-AJAX-form
+sliderCarousel(); // Carousel
